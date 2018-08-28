@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>草帽Lee的博客</title>
+  
+  
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://yoursite.com/"/>
+  <updated>2018-08-24T03:43:37.163Z</updated>
+  <id>http://yoursite.com/</id>
+  
+  <author>
+    <name>Lee</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Charles抓取https请求 ssl证书问题</title>
+    <link href="http://yoursite.com/2018/08/21/Charles/"/>
+    <id>http://yoursite.com/2018/08/21/Charles/</id>
+    <published>2018-08-21T03:41:34.000Z</published>
+    <updated>2018-08-24T03:43:37.163Z</updated>
+    
+    <content type="html"><![CDATA[<h3 id="如何使用Charles抓取https请求"><a href="#如何使用Charles抓取https请求" class="headerlink" title="如何使用Charles抓取https请求"></a>如何使用Charles抓取https请求</h3><h4 id="设置Charles"><a href="#设置Charles" class="headerlink" title="设置Charles"></a>设置Charles</h4><p>1.Charles -&gt; 工具栏 -&gt; Proxy -&gt; Proxy Setting</p><blockquote><p>1.设置Port（默认8888）<br>2.勾选 Enable Transparent HTTP Proxying  </p></blockquote><p><img src="/2018/08/21/Charles/1.png" alt="设置Charles"> </p><p>2.Charles -&gt; 工具栏 -&gt; Proxy -&gt; SSL Proxy Setting</p><blockquote><p>1.勾选Enable SSL Proxying<br>2.在Location部份选择add，抓取任意站点、443端口的数据 </p></blockquote><p><img src="/2018/08/21/Charles/2.png" alt="设置Charles"> </p><h4 id="设置手机代理"><a href="#设置手机代理" class="headerlink" title="设置手机代理"></a>设置手机代理</h4><p>1.查看内网IP地址<br>Charles -&gt; 工具栏 -&gt; Help -&gt;Local IP Addresses<br>2.手机设置代理端口<br>3.Safari中跳转 chls.pro/ssl 下载Charles证书<br>4.设置 -&gt; 通用 -&gt; 关于本机 -&gt; 证书信任设置 -&gt; 信任Charles证书</p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h3 id=&quot;如何使用Charles抓取https请求&quot;&gt;&lt;a href=&quot;#如何使用Charles抓取https请求&quot; class=&quot;headerlink&quot; title=&quot;如何使用Charles抓取https请求&quot;&gt;&lt;/a&gt;如何使用Charles抓取https请求&lt;/h3&gt;&lt;
+      
+    
+    </summary>
+    
+      <category term="iOS" scheme="http://yoursite.com/categories/iOS/"/>
+    
+    
+      <category term="iOS" scheme="http://yoursite.com/tags/iOS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Library not loaded问题</title>
+    <link href="http://yoursite.com/2017/05/02/XcodeError/"/>
+    <id>http://yoursite.com/2017/05/02/XcodeError/</id>
+    <published>2017-05-02T11:48:19.000Z</published>
+    <updated>2017-05-02T14:33:57.000Z</updated>
+    
+    <content type="html"><![CDATA[<h4 id="Xcode8报错-Library-not-loaded"><a href="#Xcode8报错-Library-not-loaded" class="headerlink" title="Xcode8报错 Library not loaded:"></a>Xcode8报错 Library not loaded:</h4><h4 id="System-Library-Frameworks-UserNotifications-framework-UserNotifications"><a href="#System-Library-Frameworks-UserNotifications-framework-UserNotifications" class="headerlink" title="/System/Library/Frameworks/UserNotifications.framework/UserNotifications"></a>/System/Library/Frameworks/UserNotifications.framework/UserNotifications</h4><p>调试时Xcode报错<br><img src="/2017/05/02/XcodeError/1.png" alt=""><br>低版本手机中 UserNotifications框架不支持<br>Target下的Build Phases标签里，找到Link Binary With Libraries，在里面找到UserNotifications.framework，把status由<strong>Required</strong>修改成<strong>Optional</strong><br><img src="/2017/05/02/XcodeError/2.png" alt=""></p>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h4 id=&quot;Xcode8报错-Library-not-loaded&quot;&gt;&lt;a href=&quot;#Xcode8报错-Library-not-loaded&quot; class=&quot;headerlink&quot; title=&quot;Xcode8报错 Library not loaded:&quot;&gt;&lt;/a&gt;Xcod
+      
+    
+    </summary>
+    
+      <category term="iOS" scheme="http://yoursite.com/categories/iOS/"/>
+    
+    
+      <category term="iOS" scheme="http://yoursite.com/tags/iOS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>WKWebView问题</title>
+    <link href="http://yoursite.com/2017/04/28/WKWebView/"/>
+    <id>http://yoursite.com/2017/04/28/WKWebView/</id>
+    <published>2017-04-28T09:48:19.000Z</published>
+    <updated>2018-08-28T09:09:14.597Z</updated>
+    
+    <content type="html"><![CDATA[<h4 id="WKWebView无法响应H5页面中的location-href"><a href="#WKWebView无法响应H5页面中的location-href" class="headerlink" title="WKWebView无法响应H5页面中的location.href"></a>WKWebView无法响应H5页面中的location.href</h4><p>根据WKWebView代理方法 WKNavigationDelegate拦截location.herf动作</p><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)webView:(<span class="built_in">WKWebView</span> *)webView decidePolicyForNavigationAction:(<span class="built_in">WKNavigationAction</span> *)navigationAction decisionHandler:(<span class="keyword">void</span> (^)(<span class="built_in">WKNavigationActionPolicy</span>))decisionHandler &#123;</span><br><span class="line">    <span class="keyword">if</span> (![navigationAction.request.URL.absoluteString containsString:<span class="string">@"http://"</span>] &amp;&amp; ![navigationAction.request.URL.absoluteString containsString:<span class="string">@"https://"</span>]) &#123;</span><br><span class="line">       </span><br><span class="line">        &#125;</span><br><span class="line">        decisionHandler(<span class="built_in">WKNavigationActionPolicyCancel</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span>  &#123;</span><br><span class="line">        decisionHandler(<span class="built_in">WKNavigationActionPolicyAllow</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h4 id="WKWebView如何使用JS调用原生方法"><a href="#WKWebView如何使用JS调用原生方法" class="headerlink" title="WKWebView如何使用JS调用原生方法"></a>WKWebView如何使用JS调用原生方法</h4><p>1.设置WKScriptMessageHandler，注册js方法</p><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">WKWebViewConfiguration</span> *config = [<span class="built_in">WKWebViewConfiguration</span> new];</span><br><span class="line"> <span class="keyword">self</span>.userContent = [[<span class="built_in">WKUserContentController</span> alloc] init];</span><br><span class="line"> [<span class="keyword">self</span>.userContent addScriptMessageHandler:<span class="keyword">self</span> name:<span class="string">@"JSFuncName"</span>];</span><br><span class="line"> config.userContentController = <span class="keyword">self</span>.userContent;</span><br><span class="line"> <span class="built_in">WKWebView</span> *webv = [[<span class="built_in">WKWebView</span> alloc] initWithFrame:<span class="built_in">CGRectZero</span> configuration:config];</span><br></pre></td></tr></table></figure><p>2.实现WKWebView的WKScriptMessageHandler代理方法</p><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="keyword">void</span>)userContentController:(<span class="built_in">WKUserContentController</span> *)userContentController didReceiveScriptMessage:(<span class="built_in">WKScriptMessage</span> *)message</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSString</span> *scriptName = message.name;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"%@"</span>, message.body);</span><br><span class="line">    <span class="keyword">if</span>([scriptName isEqualToString:<span class="string">@"JSFuncName"</span>])&#123;</span><br><span class="line">    <span class="built_in">NSLog</span>(<span class="string">@"To Do Something"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h4 id=&quot;WKWebView无法响应H5页面中的location-href&quot;&gt;&lt;a href=&quot;#WKWebView无法响应H5页面中的location-href&quot; class=&quot;headerlink&quot; title=&quot;WKWebView无法响应H5页面中的location.
+      
+    
+    </summary>
+    
+      <category term="iOS" scheme="http://yoursite.com/categories/iOS/"/>
+    
+    
+      <category term="iOS" scheme="http://yoursite.com/tags/iOS/"/>
+    
+  </entry>
+  
+</feed>
