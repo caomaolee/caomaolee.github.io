@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2018-08-24T03:43:37.163Z</updated>
+  <updated>2018-08-28T10:23:05.538Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -21,9 +21,9 @@
     <link href="http://yoursite.com/2018/08/21/Charles/"/>
     <id>http://yoursite.com/2018/08/21/Charles/</id>
     <published>2018-08-21T03:41:34.000Z</published>
-    <updated>2018-08-24T03:43:37.163Z</updated>
+    <updated>2018-08-28T10:23:05.538Z</updated>
     
-    <content type="html"><![CDATA[<h3 id="如何使用Charles抓取https请求"><a href="#如何使用Charles抓取https请求" class="headerlink" title="如何使用Charles抓取https请求"></a>如何使用Charles抓取https请求</h3><h4 id="设置Charles"><a href="#设置Charles" class="headerlink" title="设置Charles"></a>设置Charles</h4><p>1.Charles -&gt; 工具栏 -&gt; Proxy -&gt; Proxy Setting</p><blockquote><p>1.设置Port（默认8888）<br>2.勾选 Enable Transparent HTTP Proxying  </p></blockquote><p><img src="/2018/08/21/Charles/1.png" alt="设置Charles"> </p><p>2.Charles -&gt; 工具栏 -&gt; Proxy -&gt; SSL Proxy Setting</p><blockquote><p>1.勾选Enable SSL Proxying<br>2.在Location部份选择add，抓取任意站点、443端口的数据 </p></blockquote><p><img src="/2018/08/21/Charles/2.png" alt="设置Charles"> </p><h4 id="设置手机代理"><a href="#设置手机代理" class="headerlink" title="设置手机代理"></a>设置手机代理</h4><p>1.查看内网IP地址<br>Charles -&gt; 工具栏 -&gt; Help -&gt;Local IP Addresses<br>2.手机设置代理端口<br>3.Safari中跳转 chls.pro/ssl 下载Charles证书<br>4.设置 -&gt; 通用 -&gt; 关于本机 -&gt; 证书信任设置 -&gt; 信任Charles证书</p>]]></content>
+    <content type="html"><![CDATA[<h3 id="如何使用Charles抓取https请求"><a href="#如何使用Charles抓取https请求" class="headerlink" title="如何使用Charles抓取https请求"></a>如何使用Charles抓取https请求</h3><h4 id="设置Charles"><a href="#设置Charles" class="headerlink" title="设置Charles"></a>设置Charles</h4><p>1.Charles -&gt; 工具栏 -&gt; Proxy -&gt; Proxy Setting</p><blockquote><p>1.设置Port（默认8888）<br>2.勾选 Enable Transparent HTTP Proxying  </p></blockquote><p><img src="/2018/08/21/Charles/1.png" alt="设置Charles">{:height=”100” width=”100”} </p><p>2.Charles -&gt; 工具栏 -&gt; Proxy -&gt; SSL Proxy Setting</p><blockquote><p>1.勾选Enable SSL Proxying<br>2.在Location部份选择add，抓取任意站点、443端口的数据 </p></blockquote><p><img src="/2018/08/21/Charles/2.png" alt="设置Charles"> </p><h4 id="设置手机代理"><a href="#设置手机代理" class="headerlink" title="设置手机代理"></a>设置手机代理</h4><p>1.查看内网IP地址<br>Charles -&gt; 工具栏 -&gt; Help -&gt;Local IP Addresses<br>2.手机设置代理端口<br>3.Safari中跳转 chls.pro/ssl 下载Charles证书<br>4.设置 -&gt; 通用 -&gt; 关于本机 -&gt; 证书信任设置 -&gt; 信任Charles证书</p>]]></content>
     
     <summary type="html">
     
