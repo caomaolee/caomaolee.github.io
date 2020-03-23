@@ -266,187 +266,6 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/23/响应链的传递/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Lee">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="草帽Lee的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2020/03/23/响应链的传递/" itemprop="url">
-                  未命名
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-23T14:23:09+08:00">
-                2020-03-23
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>iOS响应者链、事件的传递</p>
-<h3 id="1、响应链的传递"><a href="#1、响应链的传递" class="headerlink" title="1、响应链的传递"></a>1、响应链的传递</h3><p><a href="http://www.tuicool.com/articles/6VFn2q" target="_blank" rel="noopener">Responder一点也不神秘————iOS用户响应者链完全剖析</a>(建议全看)<br>看完上面一篇应该能完全熟悉了响应链的传递，自己可以打印一下响应链看看，代码如下：</p>
-<pre><code>- (IBAction)click:(id)sender {
-    UIResponder *res = sender;
-
-    while (res) {
-        NSLog(@&quot;*************************************\n%@&quot;,res);
-        res = [res nextResponder];
-    }
-}
-</code></pre><h3 id="2、Hit-Test-机制"><a href="#2、Hit-Test-机制" class="headerlink" title="2、Hit-Test 机制"></a>2、Hit-Test 机制</h3><p>当用户触摸(Touch)屏幕进行交互时，系统首先要找到响应者（Responder）。系统检测到手指触摸(Touch)操作时，将Touch 以UIEvent的方式加入UIApplication事件队列中。UIApplication从事件队列中取出最新的触摸事件进行分发传递到UIWindow进行处理。UIWindow 会通过hitTest:withEvent:方法寻找触碰点所在的视图，这个过程称之为hit-test view。<br>hitTest 的顺序如下</p>
-<pre><code>UIApplication -&gt; UIWindow -&gt; Root View -&gt; ··· -&gt; subview
-</code></pre><p>在顶级视图（Root View）上调用pointInside:withEvent:方法判断触摸点是否在当前视图内；</p>
-<p>如果返回NO，那么hitTest:withEvent:返回nil；</p>
-<p>如果返回YES，那么它会向当前视图的所有子视图发送hitTest:withEvent:消息，所有子视图的遍历顺序是从最顶层视图一直到到最底层视图，即从subviews数组的末尾向前遍历，直到有子视图返回非空对象或者全部子视图遍历完毕。</p>
-<p>如果有subview的hitTest:withEvent:返回非空对象则A返回此对象，处理结束（注意这个过程，子视图也是根据pointInside:withEvent:的返回值来确定是返回空还是当前子视图对象的。并且这个过程中如果子视图的hidden=YES、userInteractionEnabled=NO或者alpha小于0.1都会并忽略）；</p>
-<p>如果所有subview遍历结束仍然没有返回非空对象，则hitTest:withEvent:返回self；</p>
-<p>系统就是这样通过hit test找到触碰到的视图(Initial View)进行响应。</p>
-<h3 id="如果还不清楚Hit-Test-机制，看更加清晰的Hit-Test-机制-建议还不清楚的看"><a href="#如果还不清楚Hit-Test-机制，看更加清晰的Hit-Test-机制-建议还不清楚的看" class="headerlink" title="如果还不清楚Hit-Test 机制，看更加清晰的Hit-Test 机制(建议还不清楚的看)"></a>如果还不清楚Hit-Test 机制，看更加清晰的<a href="http://blog.csdn.net/air1120/article/details/49558519" target="_blank" rel="noopener">Hit-Test 机制</a>(建议还不清楚的看)</h3><h3 id="3、手势的原理及与touches系列的关系，具体的可以看iOS触摸事件传递响应之被忽视的手势识别器工作原理-建议不看也没关系，结论在下面了。"><a href="#3、手势的原理及与touches系列的关系，具体的可以看iOS触摸事件传递响应之被忽视的手势识别器工作原理-建议不看也没关系，结论在下面了。" class="headerlink" title="3、手势的原理及与touches系列的关系，具体的可以看iOS触摸事件传递响应之被忽视的手势识别器工作原理(建议不看也没关系，结论在下面了。)"></a>3、手势的原理及与touches系列的关系，具体的可以看<a href="https://www.jianshu.com/p/8dca02b4687e" target="_blank" rel="noopener">iOS触摸事件传递响应之被忽视的手势识别器工作原理</a>(建议不看也没关系，结论在下面了。)</h3><p>简而言之，就是下面这幅图了。触摸事件会优先分发给附在view的手势，在这段延迟的期间，如果手势被识别，那么view的touches系列将被立刻取消，如果没有被识别，那么会继续我们所熟知的touches系列流程。</p>
-<h3 id="4、实际开发中常见的相关问题"><a href="#4、实际开发中常见的相关问题" class="headerlink" title="4、实际开发中常见的相关问题"></a>4、实际开发中常见的相关问题</h3><p>在实际开发中，经常会遇到视图没有响应的情况，特别是新手会经常搞不清楚状况。</p>
-<p>一下是视图没有响应的几个情况：</p>
-<p>1.userInteractionEnabled=NO；</p>
-<p>2.hidden=YES；</p>
-<p>3.alpha=0~0.01；</p>
-<p>4.没有实现touchesBegan:withEvent:方法，直接执行touchesMove:withEvent:等方法；</p>
-<p>5.目标视图点击区域不在父视图的Frame上 (superView背景色为clear Color的时候经常会忽略这个问题)。</p>
-<h3 id="5、手势代理"><a href="#5、手势代理" class="headerlink" title="5、手势代理"></a>5、手势代理</h3><p><a href="https://yq.aliyun.com/articles/31481" target="_blank" rel="noopener">ios手势识别代理</a>，看这个基本上就够了。引用文章中的一段话，如下：</p>
-<ul>
-<li>当时做项目时这个主控制器就是RootViewController,虽然用的是ScrollView但也没考虑到导航栏的手势返回的问题 ，现在做小区宝3.0的闪购订单，用之前的就有问题了。导航栏的返回手势用不了,根据响应者链和响应事件，手势被ScrollView识别了，就到不了导航的手势识别，所以导致无法手势返回。</li>
-</ul>
-<p>我也曾经处理过这样的问题，不过我那时候是带有QQ的侧滑功能，主控制器用的View是ScrollView，导致不能侧滑。但是处理的方法都是一样的，自定义的ScrollView的代码重写gestureRecognizerShouldBegin方法如下，我是手势方向向右并且x轴起点小于60px的，让ScrollView的手势失效。这样就不会截获对应的事件了。但是其实看完上面，还有更简单的方法，就是让ScrollView的手势共存，但是这样可能会带来一些其它的问题。shouldRecognizeSimultaneouslyWithGestureRecognizer设置为true，不过应该要判断手势为UIScreenEdgePanGestureRecognizer时才return true，这样就可以了。</p>
-<pre><code>- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
-{
-    CGPoint velocity = [(UIPanGestureRecognizer *)gestureRecognizer velocityInView:self];
-    CGPoint location = [gestureRecognizer locationInView:self];
-
-    NSLog(@&quot;velocity.x:%f----location.x:%d&quot;,velocity.x,(int)location.x%(int)[UIScreen mainScreen].bounds.size.width);
-    if (velocity.x &gt; 0.0f&amp;&amp;(int)location.x%(int)[UIScreen mainScreen].bounds.size.width&lt;60) {
-        return NO;
-    }
-    return YES;
-} 
-</code></pre><h1 id="案例分析"><a href="#案例分析" class="headerlink" title="案例分析"></a>案例分析</h1><h4 id="案例一"><a href="#案例一" class="headerlink" title="案例一"></a>案例一</h4><p>下面这种做法，除非你很熟悉，否则不要这么干。因为 [super touchesBegan:touches withEvent:event];会执行原来默认的操作，如果按钮本来就没有添加对应的事件。那么[[self nextResponder] touchesBegan:touches withEvent:event];和[super touchesBegan:touches withEvent:event];将会向下一响应者发送两次事件。</p>
-<pre><code>-(void)touchesBegan:(NSSet&lt;uitouch *&gt; *)touches withEvent:(UIEvent *)event{
-    if (self.enableNextResponder) {
-        [[self nextResponder] touchesBegan:touches withEvent:event];
-        [super touchesBegan:touches withEvent:event];
-    }
-}
-</code></pre><h4 id="案例二"><a href="#案例二" class="headerlink" title="案例二"></a>案例二</h4><pre><code>Window
-　　-ViewA（能响应）
-　　　　-ButtonA
-　　　　-ViewB（不响应）
-</code></pre><p>假设ViewB完全覆盖在ButtonA上，结果是：<br>ViewA能触发<br>Button没反应<br>ViewB没反应</p>
-<p>简单来说，ViewB能阻隔ButtonA的响应，但是不能阻隔ViewA的响应。假设ViewB是个遮罩，那么并不是阻隔ViewA的事件触发。</p>
-<h4 id="案例三"><a href="#案例三" class="headerlink" title="案例三"></a>案例三</h4><p>一个按钮添加了点击事件到底发生了什么事儿。<br>我们有时候需要使用到一些特殊的情况，比如：<br>1、A包含B，AB都响应事件。<br>对于普通View，根据响应链，让B作为第一个响应者处理，然后B根据nextResponder传递触摸事件。<br>针对手势做分析：<br>手势不会走view的touches系列方法，但有自己的一系列touches方法，不过没有暴露出来。但是shouldRecognizeSimultaneouslyWithGestureRecognizer也可以做到。</p>
-<p>针对UIButton的分析：<br>UIButton addTarget分析，addTarget是UIControl的方法，其实addTarget的方法原理是，UIControl对touches的触摸事件的封装。[super touchesBegan:touches withEvent:event];包括了对<br>事件的封装处理，如果重新了[super touchesBegan:touches withEvent:event];，并且里面什么都不实现，那么当前UIButton添加的addTarget所绑定的所有事件都不会触发。因为覆盖了父类UIControl的封装方法。<br>如果我想一个按钮的事件触发，并且它的下一响应者也能触发相应的事件。那么该怎么处理呢？<br>我们在按钮上处理，重写touchesBegan系列的方法，那么根据上面所说，必须要调用super的方法，并且主动像下一响应者[self nextResponder]发送touchesBegan系列的方法。</p>
-<p>2、A包含B、C，C在B的上面，但是想让B接收事件，C不接收事件<br>这种可以这么处理，自定义C的View，重写hitTest:withEvent方法，返回nil，这样自定义C的View及其子类都不会拦截事件。这样B就可以顺利处理事件。<br>还可以把C的userInteractionEnabled设置为NO</p>
-<p>3、A是B、C的父视图，C在B的上面，这时候，CB都处理事件。这样到底行不行？根据响应链，这样应该是不靠谱的了。在C的touches方法中调用C的touches方法，然后重写B的touches方法，但是这样怪怪的。有什么高招也请多多指教。貌似也没有这样的必要。</p>
-<p>最后还发现了一篇一步到位的iOS响应者链的全过程：<a href="http://shellhue.github.io/2017/03/04/FlowOfUITouch/" target="_blank" rel="noopener">iOS触摸事件的流动</a>(想有更清晰的了解的看)<br>直接引用里面的一张图:  </p>
-<p><img src="http://qingmo.ink/images/uitouchflow.png" alt="iOS响应者链"></p>
-<p>参考资料：<br><a href="http://www.cocoachina.com/ios/20160630/16868.html" target="_blank" rel="noopener">响应者链及相关机制总结</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/13/vi-keymap/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -698,6 +517,209 @@
 </blockquote>
 <p><img src="https://image.ibb.co/ht8CDU/2.png" alt="设置Charles"> </p>
 <h4 id="设置手机代理"><a href="#设置手机代理" class="headerlink" title="设置手机代理"></a>设置手机代理</h4><p>1.查看内网IP地址<br>Charles -&gt; 工具栏 -&gt; Help -&gt;Local IP Addresses<br>2.手机设置代理端口<br>3.Safari中跳转 chls.pro/ssl 下载Charles证书<br>4.设置 -&gt; 通用 -&gt; 关于本机 -&gt; 证书信任设置 -&gt; 信任Charles证书</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/21/响应链的传递/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Lee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="草帽Lee的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2018/08/21/响应链的传递/" itemprop="url">
+                  iOS响应者链、事件的传递
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-21T11:41:34+08:00">
+                2018-08-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/iOS/" itemprop="url" rel="index">
+                    <span itemprop="name">iOS</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>##iOS响应者链、事件的传递</p>
+<h3 id="1、响应链的传递"><a href="#1、响应链的传递" class="headerlink" title="1、响应链的传递"></a>1、响应链的传递</h3><p><a href="http://www.tuicool.com/articles/6VFn2q" target="_blank" rel="noopener">Responder一点也不神秘————iOS用户响应者链完全剖析</a>(建议全看)<br>看完上面一篇应该能完全熟悉了响应链的传递，自己可以打印一下响应链看看，代码如下：</p>
+<pre><code>- (IBAction)click:(id)sender {
+    UIResponder *res = sender;
+
+    while (res) {
+        NSLog(@&quot;*************************************\n%@&quot;,res);
+        res = [res nextResponder];
+    }
+}
+</code></pre><h3 id="2、Hit-Test-机制"><a href="#2、Hit-Test-机制" class="headerlink" title="2、Hit-Test 机制"></a>2、Hit-Test 机制</h3><p>当用户触摸(Touch)屏幕进行交互时，系统首先要找到响应者（Responder）。系统检测到手指触摸(Touch)操作时，将Touch 以UIEvent的方式加入UIApplication事件队列中。UIApplication从事件队列中取出最新的触摸事件进行分发传递到UIWindow进行处理。UIWindow 会通过hitTest:withEvent:方法寻找触碰点所在的视图，这个过程称之为hit-test view。<br>hitTest 的顺序如下</p>
+<pre><code>UIApplication -&gt; UIWindow -&gt; Root View -&gt; ··· -&gt; subview
+</code></pre><p>在顶级视图（Root View）上调用pointInside:withEvent:方法判断触摸点是否在当前视图内；</p>
+<p>如果返回NO，那么hitTest:withEvent:返回nil；</p>
+<p>如果返回YES，那么它会向当前视图的所有子视图发送hitTest:withEvent:消息，所有子视图的遍历顺序是从最顶层视图一直到到最底层视图，即从subviews数组的末尾向前遍历，直到有子视图返回非空对象或者全部子视图遍历完毕。</p>
+<p>如果有subview的hitTest:withEvent:返回非空对象则A返回此对象，处理结束（注意这个过程，子视图也是根据pointInside:withEvent:的返回值来确定是返回空还是当前子视图对象的。并且这个过程中如果子视图的hidden=YES、userInteractionEnabled=NO或者alpha小于0.1都会并忽略）；</p>
+<p>如果所有subview遍历结束仍然没有返回非空对象，则hitTest:withEvent:返回self；</p>
+<p>系统就是这样通过hit test找到触碰到的视图(Initial View)进行响应。</p>
+<h3 id="如果还不清楚Hit-Test-机制，看更加清晰的Hit-Test-机制-建议还不清楚的看"><a href="#如果还不清楚Hit-Test-机制，看更加清晰的Hit-Test-机制-建议还不清楚的看" class="headerlink" title="如果还不清楚Hit-Test 机制，看更加清晰的Hit-Test 机制(建议还不清楚的看)"></a>如果还不清楚Hit-Test 机制，看更加清晰的<a href="http://blog.csdn.net/air1120/article/details/49558519" target="_blank" rel="noopener">Hit-Test 机制</a>(建议还不清楚的看)</h3><h3 id="3、手势的原理及与touches系列的关系，具体的可以看iOS触摸事件传递响应之被忽视的手势识别器工作原理-建议不看也没关系，结论在下面了。"><a href="#3、手势的原理及与touches系列的关系，具体的可以看iOS触摸事件传递响应之被忽视的手势识别器工作原理-建议不看也没关系，结论在下面了。" class="headerlink" title="3、手势的原理及与touches系列的关系，具体的可以看iOS触摸事件传递响应之被忽视的手势识别器工作原理(建议不看也没关系，结论在下面了。)"></a>3、手势的原理及与touches系列的关系，具体的可以看<a href="https://www.jianshu.com/p/8dca02b4687e" target="_blank" rel="noopener">iOS触摸事件传递响应之被忽视的手势识别器工作原理</a>(建议不看也没关系，结论在下面了。)</h3><p>简而言之，就是下面这幅图了。触摸事件会优先分发给附在view的手势，在这段延迟的期间，如果手势被识别，那么view的touches系列将被立刻取消，如果没有被识别，那么会继续我们所熟知的touches系列流程。</p>
+<h3 id="4、实际开发中常见的相关问题"><a href="#4、实际开发中常见的相关问题" class="headerlink" title="4、实际开发中常见的相关问题"></a>4、实际开发中常见的相关问题</h3><p>在实际开发中，经常会遇到视图没有响应的情况，特别是新手会经常搞不清楚状况。</p>
+<p>一下是视图没有响应的几个情况：</p>
+<p>1.userInteractionEnabled=NO；</p>
+<p>2.hidden=YES；</p>
+<p>3.alpha=0~0.01；</p>
+<p>4.没有实现touchesBegan:withEvent:方法，直接执行touchesMove:withEvent:等方法；</p>
+<p>5.目标视图点击区域不在父视图的Frame上 (superView背景色为clear Color的时候经常会忽略这个问题)。</p>
+<h3 id="5、手势代理"><a href="#5、手势代理" class="headerlink" title="5、手势代理"></a>5、手势代理</h3><p><a href="https://yq.aliyun.com/articles/31481" target="_blank" rel="noopener">ios手势识别代理</a>，看这个基本上就够了。引用文章中的一段话，如下：</p>
+<ul>
+<li>当时做项目时这个主控制器就是RootViewController,虽然用的是ScrollView但也没考虑到导航栏的手势返回的问题 ，现在做小区宝3.0的闪购订单，用之前的就有问题了。导航栏的返回手势用不了,根据响应者链和响应事件，手势被ScrollView识别了，就到不了导航的手势识别，所以导致无法手势返回。</li>
+</ul>
+<p>我也曾经处理过这样的问题，不过我那时候是带有QQ的侧滑功能，主控制器用的View是ScrollView，导致不能侧滑。但是处理的方法都是一样的，自定义的ScrollView的代码重写gestureRecognizerShouldBegin方法如下，我是手势方向向右并且x轴起点小于60px的，让ScrollView的手势失效。这样就不会截获对应的事件了。但是其实看完上面，还有更简单的方法，就是让ScrollView的手势共存，但是这样可能会带来一些其它的问题。shouldRecognizeSimultaneouslyWithGestureRecognizer设置为true，不过应该要判断手势为UIScreenEdgePanGestureRecognizer时才return true，这样就可以了。</p>
+<pre><code>- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+{
+    CGPoint velocity = [(UIPanGestureRecognizer *)gestureRecognizer velocityInView:self];
+    CGPoint location = [gestureRecognizer locationInView:self];
+
+    NSLog(@&quot;velocity.x:%f----location.x:%d&quot;,velocity.x,(int)location.x%(int)[UIScreen mainScreen].bounds.size.width);
+    if (velocity.x &gt; 0.0f&amp;&amp;(int)location.x%(int)[UIScreen mainScreen].bounds.size.width&lt;60) {
+        return NO;
+    }
+    return YES;
+} 
+</code></pre><h1 id="案例分析"><a href="#案例分析" class="headerlink" title="案例分析"></a>案例分析</h1><h4 id="案例一"><a href="#案例一" class="headerlink" title="案例一"></a>案例一</h4><p>下面这种做法，除非你很熟悉，否则不要这么干。因为 [super touchesBegan:touches withEvent:event];会执行原来默认的操作，如果按钮本来就没有添加对应的事件。那么[[self nextResponder] touchesBegan:touches withEvent:event];和[super touchesBegan:touches withEvent:event];将会向下一响应者发送两次事件。</p>
+<pre><code>-(void)touchesBegan:(NSSet&lt;uitouch *&gt; *)touches withEvent:(UIEvent *)event{
+    if (self.enableNextResponder) {
+        [[self nextResponder] touchesBegan:touches withEvent:event];
+        [super touchesBegan:touches withEvent:event];
+    }
+}
+</code></pre><h4 id="案例二"><a href="#案例二" class="headerlink" title="案例二"></a>案例二</h4><pre><code>Window
+　　-ViewA（能响应）
+　　　　-ButtonA
+　　　　-ViewB（不响应）
+</code></pre><p>假设ViewB完全覆盖在ButtonA上，结果是：<br>ViewA能触发<br>Button没反应<br>ViewB没反应</p>
+<p>简单来说，ViewB能阻隔ButtonA的响应，但是不能阻隔ViewA的响应。假设ViewB是个遮罩，那么并不是阻隔ViewA的事件触发。</p>
+<h4 id="案例三"><a href="#案例三" class="headerlink" title="案例三"></a>案例三</h4><p>一个按钮添加了点击事件到底发生了什么事儿。<br>我们有时候需要使用到一些特殊的情况，比如：<br>1、A包含B，AB都响应事件。<br>对于普通View，根据响应链，让B作为第一个响应者处理，然后B根据nextResponder传递触摸事件。<br>针对手势做分析：<br>手势不会走view的touches系列方法，但有自己的一系列touches方法，不过没有暴露出来。但是shouldRecognizeSimultaneouslyWithGestureRecognizer也可以做到。</p>
+<p>针对UIButton的分析：<br>UIButton addTarget分析，addTarget是UIControl的方法，其实addTarget的方法原理是，UIControl对touches的触摸事件的封装。[super touchesBegan:touches withEvent:event];包括了对<br>事件的封装处理，如果重新了[super touchesBegan:touches withEvent:event];，并且里面什么都不实现，那么当前UIButton添加的addTarget所绑定的所有事件都不会触发。因为覆盖了父类UIControl的封装方法。<br>如果我想一个按钮的事件触发，并且它的下一响应者也能触发相应的事件。那么该怎么处理呢？<br>我们在按钮上处理，重写touchesBegan系列的方法，那么根据上面所说，必须要调用super的方法，并且主动像下一响应者[self nextResponder]发送touchesBegan系列的方法。</p>
+<p>2、A包含B、C，C在B的上面，但是想让B接收事件，C不接收事件<br>这种可以这么处理，自定义C的View，重写hitTest:withEvent方法，返回nil，这样自定义C的View及其子类都不会拦截事件。这样B就可以顺利处理事件。<br>还可以把C的userInteractionEnabled设置为NO</p>
+<p>3、A是B、C的父视图，C在B的上面，这时候，CB都处理事件。这样到底行不行？根据响应链，这样应该是不靠谱的了。在C的touches方法中调用C的touches方法，然后重写B的touches方法，但是这样怪怪的。有什么高招也请多多指教。貌似也没有这样的必要。</p>
+<p>最后还发现了一篇一步到位的iOS响应者链的全过程：<a href="http://shellhue.github.io/2017/03/04/FlowOfUITouch/" target="_blank" rel="noopener">iOS触摸事件的流动</a>(想有更清晰的了解的看)<br>直接引用里面的一张图:  </p>
+<p><img src="http://qingmo.ink/images/uitouchflow.png" alt="iOS响应者链"></p>
+<p>参考资料：<br><a href="http://www.cocoachina.com/ios/20160630/16868.html" target="_blank" rel="noopener">响应者链及相关机制总结</a></p>
 
           
         
